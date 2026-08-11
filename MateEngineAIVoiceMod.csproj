@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <RootNamespace>MateEngine.AIVoiceMod</RootNamespace>
+    <AssemblyName>MateEngineAIVoiceMod</AssemblyName>
+    <Deterministic>true</Deterministic>
+    <MateEngineProjectDir Condition="'$(MateEngineProjectDir)' == ''">..\Mate-Engine</MateEngineProjectDir>
+    <PlayerManagedDir Condition="'$(PlayerManagedDir)' == ''">..\.base-research\smoke-player\MateEngineX_Data\Managed</PlayerManagedDir>
+    <UnityEditorDir Condition="'$(UnityEditorDir)' == ''">C:\Program Files\Unity\Hub\Editor\6000.4.4f1\Editor</UnityEditorDir>
+    <ULipSyncAssembly Condition="'$(ULipSyncAssembly)' == ''">$(MateEngineProjectDir)\Library\ScriptAssemblies\uLipSync.Runtime.dll</ULipSyncAssembly>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="NAudio.Core"><HintPath>$(PlayerManagedDir)\NAudio.Core.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="NAudio.Wasapi"><HintPath>$(PlayerManagedDir)\NAudio.Wasapi.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="NAudio.WinMM"><HintPath>$(MateEngineProjectDir)\Assets\Packages\NAudio.WinMM.2.2.1\lib\netstandard2.0\NAudio.WinMM.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Newtonsoft.Json"><HintPath>$(PlayerManagedDir)\Newtonsoft.Json.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Assembly-CSharp"><HintPath>$(PlayerManagedDir)\Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="undream.llmunity.Runtime"><HintPath>$(PlayerManagedDir)\undream.llmunity.Runtime.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="uLipSync.Runtime"><HintPath>$(ULipSyncAssembly)</HintPath><Private>false</Private></Reference>
+    <Reference Include="VRM"><HintPath>$(PlayerManagedDir)\VRM.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="VRM10"><HintPath>$(PlayerManagedDir)\VRM10.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UniHumanoid"><HintPath>$(PlayerManagedDir)\UniHumanoid.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Unity.Collections"><HintPath>$(PlayerManagedDir)\Unity.Collections.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Unity.Mathematics"><HintPath>$(PlayerManagedDir)\Unity.Mathematics.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine"><HintPath>$(PlayerManagedDir)\UnityEngine.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(PlayerManagedDir)\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.AudioModule"><HintPath>$(PlayerManagedDir)\UnityEngine.AudioModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.AnimationModule"><HintPath>$(PlayerManagedDir)\UnityEngine.AnimationModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.JSONSerializeModule"><HintPath>$(PlayerManagedDir)\UnityEngine.JSONSerializeModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UI"><HintPath>$(PlayerManagedDir)\UnityEngine.UI.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Unity.TextMeshPro"><HintPath>$(PlayerManagedDir)\Unity.TextMeshPro.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UIModule"><HintPath>$(PlayerManagedDir)\UnityEngine.UIModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.InputLegacyModule"><HintPath>$(PlayerManagedDir)\UnityEngine.InputLegacyModule.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="src\*.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\lipsync-profile.json">
+      <LogicalName>MateEngine.AIVoiceMod.Resources.lipsync-profile.json</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

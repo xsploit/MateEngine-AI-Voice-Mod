@@ -1,0 +1,26 @@
+bin/
+obj/
+/artifacts/
+/release/
+
+# Keep the installer sources, but publish generated binaries through Releases.
+/dist/*
+!/dist/*.ps1
+!/dist/*.cmd
+
+*.log
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.user
+*.suo
+*.key.json
+*.tmp
+*.bak
+
+# Unity-generated state must never enter this source repository.
+/unity/Library/
+/unity/Logs/
+/unity/Temp/
+/unity/obj/
