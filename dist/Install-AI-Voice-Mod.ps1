@@ -185,4 +185,4 @@ Write-Host ''
 Write-Host 'MateEngine AI + Voice mod installed.' -ForegroundColor Green
 Write-Host "Game: $gameRoot"
 Write-Host "Mod:  $installedMePath"
-Write-Host 'Start Mate Engine and press J to open the native AI + voice settings.'
+Write-Host 'Start Mate Engine. Reopen AI + voice settings from the MateEngine tray icon; F8 remains the native Value Changer.'

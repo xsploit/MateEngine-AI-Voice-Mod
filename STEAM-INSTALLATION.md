@@ -7,8 +7,8 @@ This package targets the native Windows Steam release of MateEngine, AppID `3625
 1. Install MateEngine in Steam and launch it once.
 2. Close MateEngine completely.
 3. Extract the release ZIP and run `Install-AI-Voice-Mod.cmd`.
-4. Start MateEngine from Steam.
-5. Press `J` to open **MateEngine AI + Voice**.
+4. Start MateEngine from Steam. **MateEngine AI + Voice** opens automatically.
+5. Use **AI + Voice Settings** in MateEngine's system-tray context menu to reopen it. `F8` remains MateEngine's native **ME Value Changer (Runtime)** shortcut.
 6. Enter the applicable OpenRouter or Vercel AI Gateway key and, for speech, a Fish Audio key.
 7. Choose the model, route, voice, Fish transport/pacing, personality, and lip-sync settings, then select **Save**.
 
@@ -115,7 +115,7 @@ The uninstaller removes only files and manifest registrations owned by this inst
 
 ## If chat stays on Loading
 
-- Press `J`, confirm the selected provider has its matching key, and select **Save**.
+- Reopen **AI + Voice Settings** from MateEngine's tray icon, confirm the selected provider has its matching key, and select **Save**.
 - Refresh/select a model supported by the provider. Vercel IDs include creator and model names.
 - Check `Player.log` for the terminal provider error.
 - Confirm all six managed DLLs are present and registered, then rerun the installer after a Steam update or verification.

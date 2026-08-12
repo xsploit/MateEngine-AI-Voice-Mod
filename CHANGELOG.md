@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2 - 2026-08-12
+
+- Removed the letter-key `J` shortcut so ordinary typing can never open or close the plugin menu.
+- Added an **AI + Voice Settings** command to MateEngine's system-tray context menu.
+- Left `F8` under MateEngine's ownership for its native **ME Value Changer (Runtime)** menu.
+
 ## 0.1.1 - 2026-08-12
 
 - Fixed tiny AI + Voice menu text by targeting a 1920x1080 Unity canvas reference resolution.

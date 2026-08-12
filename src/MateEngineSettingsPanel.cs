@@ -5,7 +5,7 @@ using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
+using Utils;
 
 namespace MateEngine.AIVoiceMod
 {
@@ -101,6 +101,8 @@ namespace MateEngine.AIVoiceMod
         private MenuActions gameMenuActions;
         private MenuEntry menuEntry;
         private bool menuRegistered;
+        private Func<List<(string, Action)>> previousTrayMenuBuilder;
+        private Func<List<(string, Action)>> trayMenuBuilder;
 
         private void Start()
         {
@@ -115,6 +117,7 @@ namespace MateEngine.AIVoiceMod
             gameMenuActions = FindFirstObjectByType<MenuActions>(FindObjectsInactive.Include);
             menuEntry = new MenuEntry { menu = canvas.gameObject };
             RegisterMenu();
+            RegisterTrayMenu();
         }
 
         private void WireEvents()
@@ -313,16 +316,23 @@ namespace MateEngine.AIVoiceMod
             lipSyncGainValueText.text = lipSyncGainSlider.value.ToString("0.00") + "x";
             lipSyncVolumeInfluenceValueText.text = lipSyncVolumeInfluenceSlider.value.ToString("0.00");
         }
-        private void Update()
+        public void OpenSettings()
         {
-            if (IsTyping() || !Input.GetKeyDown(KeyCode.J)) return;
-            bool active = !canvas.gameObject.activeSelf; canvas.gameObject.SetActive(active);
-            if (active) RegisterMenu(); else UnregisterMenu();
+            canvas.gameObject.SetActive(true);
+            RegisterMenu();
         }
-        private static bool IsTyping()
+
+        private void RegisterTrayMenu()
         {
-            var selected = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
-            return selected != null && (selected.GetComponent<TMP_InputField>() != null || selected.GetComponent<InputField>() != null);
+            previousTrayMenuBuilder = TrayIcon.OnBuildMenu;
+            trayMenuBuilder = () =>
+            {
+                var entries = previousTrayMenuBuilder != null ? previousTrayMenuBuilder() : new List<(string, Action)>();
+                entries.Insert(0, ("AI + Voice Settings", OpenSettings));
+                entries.Insert(1, (TrayIcon.SEPARATOR, null));
+                return entries;
+            };
+            TrayIcon.OnBuildMenu = trayMenuBuilder;
         }
         private void RegisterMenu()
         {
@@ -347,6 +357,11 @@ namespace MateEngine.AIVoiceMod
             var tags = new List<string>(); if (value.supportsStructuredOutputs) tags.Add("json"); if (value.inputModalities.Contains("image")) tags.Add("vision"); if (value.supportsImplicitCaching) tags.Add("cache"); if (value.contextWindow.HasValue) tags.Add((value.contextWindow.Value / 1000) + "K ctx");
             return tags.Count == 0 ? "" : " [" + string.Join(", ", tags.ToArray()) + "]";
         }
-        private void OnDestroy() { UnregisterMenu(); if (requests != null) { requests.Cancel(); requests.Dispose(); } }
+        private void OnDestroy()
+        {
+            UnregisterMenu();
+            if (TrayIcon.OnBuildMenu == trayMenuBuilder) TrayIcon.OnBuildMenu = previousTrayMenuBuilder;
+            if (requests != null) { requests.Cancel(); requests.Dispose(); }
+        }
     }
 }

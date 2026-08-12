@@ -18,11 +18,13 @@ The complete runtime is a .NET Framework 4.7.2 assembly loaded directly by MateE
 
 ## Install
 
-Download the binary release ZIP, extract it, close MateEngine, and run `Install-AI-Voice-Mod.cmd`. Start MateEngine and press `J` to open the compact AI + voice panel.
+Download the binary release ZIP, extract it, close MateEngine, and run `Install-AI-Voice-Mod.cmd`. The compact AI + voice panel opens when MateEngine starts. After closing it, right-click MateEngine's system-tray icon and select **AI + Voice Settings** to reopen it.
 
 Enter the key for the selected LLM gateway and, for speech, a Fish Audio key. Choose the model, voice, routing, transport, and lip-sync settings, then select **Save**.
 
 Use the **− 100% +** controls in the panel footer to resize the entire interface from 80% to 160%. The selected UI scale is saved locally and restored the next time MateEngine starts. Windows desktop scaling does not control this Unity overlay.
+
+The mod deliberately leaves MateEngine's native `F8` shortcut alone: `F8` opens **ME Value Changer (Runtime)**. No letter key is bound to the AI settings panel, so typing cannot open or close it.
 
 For an explicit installation path:
 
@@ -60,14 +62,14 @@ Build the DLL and `.me` package:
 Create tested versioned binary and source archives:
 
 ```powershell
-.\Release-Mod.ps1 -Version 0.1.1 -MateEngineProject 'D:\path\to\Mate-Engine'
+.\Release-Mod.ps1 -Version 0.1.2 -MateEngineProject 'D:\path\to\Mate-Engine'
 ```
 
 Use `-SkipBuild` only when `dist` already contains a freshly validated build.
 
-## Verified for v0.1.1
+## Verified for v0.1.2
 
-- Release assembly builds deterministically as version `0.1.1.0`.
+- Release assembly builds deterministically as version `0.1.2.0`.
 - All 20 protocol, routing, speech, playback, lip-sync, and settings tests pass.
 - Unity batch validation confirms all 71 serialized menu controls are assigned before packaging.
 - Installer tests cover clean install, idempotent reinstall, uninstall, runtime dependencies, and preservation of an existing MateEngine uLipSync installation.
