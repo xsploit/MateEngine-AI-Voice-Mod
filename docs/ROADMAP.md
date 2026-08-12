@@ -4,7 +4,8 @@
 
 - `F8` remains MateEngine's native **ME Value Changer (Runtime)** shortcut.
 - AI + Voice settings reopen from MateEngine's system-tray menu and do not own a typing key.
-- `F9` is reserved for a compact AI composer once that composer is implemented. It must never toggle the full settings panel.
+- `F9` is reserved for the compact AI composer once that composer is implemented. This is a normal in-app hotkey and must never toggle the full settings panel.
+- Only speech-to-text owns a Windows-global hotkey, so recording can start while another application has focus.
 - The radial chat action remains unchanged. Messages submitted through MateEngine's radial chat may continue to use its native bubbles.
 
 ## Compact composer
@@ -24,6 +25,8 @@ The first STT implementation supports both hosted BYOK gateways already present 
 
 Add an independent **STT Provider** dropdown with `Same as LLM`, `Vercel AI Gateway`, and `OpenRouter`. `Same as LLM` is the default. The transcription-model dropdown must be capability-filtered for the selected STT gateway rather than reusing the chat-model dropdown.
 
+Add a configurable **Global STT Hotkey**. It controls recording only; it does not open settings or toggle the composer. The first mode is press once to start and press again to stop/transcribe, with an optional hold-to-talk mode afterward. Use a modifier chord by default and persist the selected chord locally. The listener must work while MateEngine is unfocused and must not consume ordinary typing.
+
 Record mono PCM to an in-memory WAV with NAudio, send it after the user stops recording, then place the returned transcript into the composer for review. Auto-send should be optional and off by default.
 
 Both hosted routes avoid a local model download or additional native inference runtime in the Steam mod. A local **Whisper.NET** provider can follow as an optional offline mode, with explicit model download, CPU/GPU runtime selection, and disk-usage UI.
@@ -38,6 +41,6 @@ References:
 ## Delivery order
 
 1. Floating composer and `F9` toggle, with direct history-preserving chat and no bubbles.
-2. Vercel/OpenRouter push-to-talk transcription into the composer.
+2. Vercel/OpenRouter transcription plus the dedicated Windows-global STT hotkey.
 3. Composer/history persistence checks across restart and character changes.
 4. Optional local Whisper.NET provider after the hosted path is stable.
