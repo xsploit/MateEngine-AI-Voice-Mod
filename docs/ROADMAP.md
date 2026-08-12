@@ -17,20 +17,27 @@ The overlay should show only concise states such as **Listening**, **Transcribin
 
 ## Speech to text
 
-The first STT implementation will use OpenRouter's dedicated `POST /api/v1/audio/transcriptions` endpoint with the user's existing OpenRouter key. Record mono PCM to an in-memory WAV with NAudio, send it after the user stops recording, then place the returned transcript into the composer for review. Auto-send should be optional and off by default.
+The first STT implementation supports both hosted BYOK gateways already present in the mod:
 
-Default model: `openai/whisper-large-v3`. Keep the model configurable so available transcription models can change without rebuilding the mod.
+- **Vercel AI Gateway** using the saved Vercel key and a Vercel transcription model such as `openai/whisper-1`, `openai/gpt-4o-mini-transcribe`, or `openai/gpt-4o-transcribe`.
+- **OpenRouter** using the saved OpenRouter key and its dedicated `POST /api/v1/audio/transcriptions` endpoint with a model such as `openai/whisper-large-v3`.
 
-OpenRouter is the first implementation because it adds no local model download or additional native inference runtime to the Steam mod. A local **Whisper.NET** provider can follow as an optional offline mode, with explicit model download, CPU/GPU runtime selection, and disk-usage UI.
+Add an independent **STT Provider** dropdown with `Same as LLM`, `Vercel AI Gateway`, and `OpenRouter`. `Same as LLM` is the default. The transcription-model dropdown must be capability-filtered for the selected STT gateway rather than reusing the chat-model dropdown.
+
+Record mono PCM to an in-memory WAV with NAudio, send it after the user stops recording, then place the returned transcript into the composer for review. Auto-send should be optional and off by default.
+
+Both hosted routes avoid a local model download or additional native inference runtime in the Steam mod. A local **Whisper.NET** provider can follow as an optional offline mode, with explicit model download, CPU/GPU runtime selection, and disk-usage UI.
 
 References:
 
 - [OpenRouter audio transcription API](https://openrouter.ai/docs/api/api-reference/transcriptions/create-audio-transcriptions)
+- [Vercel AI Gateway Whisper model](https://vercel.com/ai-gateway/models/whisper-1)
+- [Vercel AI Gateway audio support](https://vercel.com/changelog/realtime-voice-speech-and-transcription-now-supported-on-ai-gateway)
 - [Whisper.NET](https://github.com/sandrohanea/whisper.net)
 
 ## Delivery order
 
 1. Floating composer and `F9` toggle, with direct history-preserving chat and no bubbles.
-2. OpenRouter push-to-talk transcription into the composer.
+2. Vercel/OpenRouter push-to-talk transcription into the composer.
 3. Composer/history persistence checks across restart and character changes.
 4. Optional local Whisper.NET provider after the hosted path is stable.
