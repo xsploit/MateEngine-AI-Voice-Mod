@@ -17,9 +17,17 @@ foreach ($path in @($UnityEditor, $MSBuild, (Join-Path $MateEngineProject 'Asset
 $projectLipSync = Join-Path $MateEngineProject 'Library\ScriptAssemblies\uLipSync.Runtime.dll'
 $lipSyncReference = if (Test-Path -LiteralPath $projectLipSync -PathType Leaf) { $projectLipSync } else { Join-Path $projectRoot 'dist\uLipSync.Runtime.dll' }
 $playerAssemblies = Join-Path $MateEngineProject 'Library\Bee\PlayerScriptAssemblies'
-$collectionsSource = Join-Path $playerAssemblies 'Unity.Collections.dll'
-$mathematicsSource = Join-Path $playerAssemblies 'Unity.Mathematics.dll'
-$collectionsIlRoot = Join-Path $MateEngineProject 'Library\PackageCache\com.unity.collections@9c2353fb96f6\Unity.Collections.LowLevel.ILSupport'
+$scriptAssemblies = Join-Path $MateEngineProject 'Library\ScriptAssemblies'
+$collectionsSource = @((Join-Path $playerAssemblies 'Unity.Collections.dll'), (Join-Path $scriptAssemblies 'Unity.Collections.dll')) |
+    Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
+$mathematicsSource = @((Join-Path $playerAssemblies 'Unity.Mathematics.dll'), (Join-Path $scriptAssemblies 'Unity.Mathematics.dll')) |
+    Where-Object { Test-Path -LiteralPath $_ -PathType Leaf } | Select-Object -First 1
+$packageCache = Join-Path $MateEngineProject 'Library\PackageCache'
+$collectionsPackageRoot = Get-ChildItem -LiteralPath $packageCache -Directory -Filter 'com.unity.collections@*' |
+    Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName 'Unity.Collections.LowLevel.ILSupport\Unity.Collections.LowLevel.ILSupport.dll') -PathType Leaf } |
+    Select-Object -First 1 -ExpandProperty FullName
+if (-not $collectionsPackageRoot) { throw "Unity Collections package cache is missing from $packageCache. Open the MateEngine project in Unity once, then rebuild." }
+$collectionsIlRoot = Join-Path $collectionsPackageRoot 'Unity.Collections.LowLevel.ILSupport'
 $collectionsIlSource = Join-Path $collectionsIlRoot 'Unity.Collections.LowLevel.ILSupport.dll'
 $winMmSource = Join-Path $MateEngineProject 'Assets\Packages\NAudio.WinMM.2.2.1\lib\netstandard2.0\NAudio.WinMM.dll'
 foreach ($required in @($winMmSource, $collectionsSource, $mathematicsSource, $collectionsIlSource)) {
@@ -55,7 +63,7 @@ Copy-Item -LiteralPath (Join-Path $projectRoot 'bin\Release\MateEngineAIVoiceMod
 $retarget = Join-Path $projectRoot 'tools\Retarget-NetstandardAssembly.ps1'
 $managedFallback = Join-Path $projectRoot 'tools\Use-ManagedBurstFallback.ps1'
 $unityEngineManaged = Join-Path (Split-Path -Parent $UnityEditor) 'Data\Managed\UnityEngine'
-$retargetSearch = @($playerAssemblies, $collectionsIlRoot, (Join-Path $MateEngineProject 'Library\ScriptAssemblies'), $unityEngineManaged)
+$retargetSearch = @($playerAssemblies, $collectionsIlRoot, $scriptAssemblies, $unityEngineManaged)
 $retargetedLipSync = Join-Path $projectRoot 'obj\uLipSync.Runtime.retargeted.dll'
 & $retarget -InputPath $lipSyncReference -OutputPath $retargetedLipSync -SearchDirectories $retargetSearch
 & $managedFallback -InputPath $retargetedLipSync -OutputPath (Join-Path $projectRoot 'dist\uLipSync.Runtime.dll') -SearchDirectories $retargetSearch

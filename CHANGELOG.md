@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1 - 2026-08-12
+
+- Fixed tiny AI + Voice menu text by targeting a 1920x1080 Unity canvas reference resolution.
+- Added persistent 80%-160% panel scaling controls in the menu footer.
+- Made the Unity Collections package lookup resilient to changing Unity package-cache hashes.
+
 ## 0.1.0 - 2026-08-10
 
 Initial public release.

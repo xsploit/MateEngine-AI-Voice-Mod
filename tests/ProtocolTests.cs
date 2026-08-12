@@ -99,9 +99,10 @@ internal static class ProtocolTests
         {
             var first = new ModSettings { model = "first/model" };
             first.Save(path);
-            var second = new ModSettings { model = "second/model" };
+            var second = new ModSettings { model = "second/model", uiScale = 1.4f };
             second.Save(path);
             Check(ModSettings.Load(path).model == "second/model", "Settings save replaces current file");
+            Check(Math.Abs(ModSettings.Load(path).uiScale - 1.4f) < 0.001f, "UI scale persists across settings reload");
             Check(File.Exists(path + ".bak") && ModSettings.Load(path + ".bak").model == "first/model", "Settings save preserves backup");
         }
         finally
@@ -115,6 +116,7 @@ internal static class ProtocolTests
         var value = new ModSettings
         {
             ttsVolume = 9f,
+            uiScale = 5f,
             lipSyncMode = "unknown",
             lipSyncSmoothing = 1f,
             lipSyncGain = 0f,
@@ -122,6 +124,7 @@ internal static class ProtocolTests
         };
         value.Normalize();
         Check(value.ttsVolume == 2f, "Playback volume follows supported bounds");
+        Check(value.uiScale == 1.6f, "UI scale follows supported bounds");
         Check(value.lipSyncMode == "hybrid", "Unknown lip sync mode falls back to hybrid");
         Check(value.lipSyncSmoothing == 0.9f && value.lipSyncGain == 0.1f && value.lipSyncVolumeInfluence == 0f, "Lip sync tuning follows supported bounds");
     }

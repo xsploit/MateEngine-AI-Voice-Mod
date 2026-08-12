@@ -58,6 +58,7 @@ namespace MateEngine.AIVoiceMod
     {
         public int schemaVersion = 1;
         public bool enabled = true;
+        public float uiScale = 1f;
         public int proxyPort = 13333;
         public LlmProvider llmProvider = LlmProvider.VercelGateway;
         public string model = "google/gemini-3.1-flash-lite";
@@ -132,6 +133,7 @@ namespace MateEngine.AIVoiceMod
             if (personas.Count == 0) personas.Add(new Persona());
             if (personas.Find(x => x.id == activePersonaId) == null) activePersonaId = personas[0].id;
             proxyPort = Math.Max(1024, Math.Min(65535, proxyPort));
+            uiScale = Math.Max(0.8f, Math.Min(1.6f, uiScale));
             temperature = Math.Max(0, Math.Min(2, temperature));
             maxTokens = Math.Max(80, Math.Min(4000, maxTokens));
             fishSampleRate = Math.Max(16000, Math.Min(48000, fishSampleRate));

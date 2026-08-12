@@ -14,9 +14,13 @@ namespace MateEngine.AIVoiceMod
     {
         [Header("Navigation")]
         public Canvas canvas;
+        public RectTransform panelRoot;
         public Button closeButton;
         public Button saveButton;
         public TMP_Text statusText;
+        public Button uiScaleDownButton;
+        public Button uiScaleUpButton;
+        public TMP_Text uiScaleText;
         public Button llmTabButton;
         public Button characterTabButton;
         public Button fishTabButton;
@@ -117,6 +121,8 @@ namespace MateEngine.AIVoiceMod
         {
             saveButton.onClick.AddListener(SaveAndApply);
             closeButton.onClick.AddListener(() => { canvas.gameObject.SetActive(false); UnregisterMenu(); });
+            uiScaleDownButton.onClick.AddListener(() => ChangeUiScale(-0.1f));
+            uiScaleUpButton.onClick.AddListener(() => ChangeUiScale(0.1f));
             refreshModelsButton.onClick.AddListener(RefreshModels);
             refreshEndpointsButton.onClick.AddListener(RefreshEndpoints);
             fetchMyVoicesButton.onClick.AddListener(() => RefreshVoices(true));
@@ -160,7 +166,26 @@ namespace MateEngine.AIVoiceMod
             chunkLengthSlider.value = value.fishChunkLength; speechSpeedSlider.value = value.speechSpeed; ttsVolumeSlider.value = value.ttsVolume;
             lipSyncModeDropdown.options = Options("Hybrid (analyser blend)", "wLipSync Direct (raw)"); lipSyncModeDropdown.value = value.lipSyncMode == "direct" ? 1 : 0;
             lipSyncSmoothingSlider.value = value.lipSyncSmoothing; lipSyncGainSlider.value = value.lipSyncGain; lipSyncVolumeInfluenceSlider.value = value.lipSyncVolumeInfluence;
+            ApplyUiScale(value.uiScale);
             PopulatePersonas(value); PopulateRouting(value); LoadPersona(value.ActivePersona); RefreshValueLabels();
+        }
+
+        private void ChangeUiScale(float delta)
+        {
+            var value = runtime.Settings;
+            value.uiScale = Mathf.Round(Mathf.Clamp(value.uiScale + delta, 0.8f, 1.6f) * 10f) / 10f;
+            ApplyUiScale(value.uiScale);
+            runtime.SaveAndApply();
+            SetStatus("UI scale saved at " + Mathf.RoundToInt(value.uiScale * 100f) + "%.");
+        }
+
+        private void ApplyUiScale(float value)
+        {
+            value = Mathf.Clamp(value, 0.8f, 1.6f);
+            panelRoot.localScale = new Vector3(value, value, 1f);
+            uiScaleText.text = Mathf.RoundToInt(value * 100f) + "%";
+            uiScaleDownButton.interactable = value > 0.8f;
+            uiScaleUpButton.interactable = value < 1.6f;
         }
 
         private void PopulateRouting(ModSettings value)

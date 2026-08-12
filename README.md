@@ -22,6 +22,8 @@ Download the binary release ZIP, extract it, close MateEngine, and run `Install-
 
 Enter the key for the selected LLM gateway and, for speech, a Fish Audio key. Choose the model, voice, routing, transport, and lip-sync settings, then select **Save**.
 
+Use the **− 100% +** controls in the panel footer to resize the entire interface from 80% to 160%. The selected UI scale is saved locally and restored the next time MateEngine starts. Windows desktop scaling does not control this Unity overlay.
+
 For an explicit installation path:
 
 ```powershell
@@ -58,16 +60,16 @@ Build the DLL and `.me` package:
 Create tested versioned binary and source archives:
 
 ```powershell
-.\Release-Mod.ps1 -Version 0.1.0 -MateEngineProject 'D:\path\to\Mate-Engine'
+.\Release-Mod.ps1 -Version 0.1.1 -MateEngineProject 'D:\path\to\Mate-Engine'
 ```
 
 Use `-SkipBuild` only when `dist` already contains a freshly validated build.
 
-## Verified for v0.1.0
+## Verified for v0.1.1
 
-- Release assembly builds deterministically as version `0.1.0.0`.
-- All 18 protocol, routing, speech, playback, lip-sync, and settings tests pass.
-- Unity batch validation confirms all 67 serialized menu controls are assigned before packaging.
+- Release assembly builds deterministically as version `0.1.1.0`.
+- All 20 protocol, routing, speech, playback, lip-sync, and settings tests pass.
+- Unity batch validation confirms all 71 serialized menu controls are assigned before packaging.
 - Installer tests cover clean install, idempotent reinstall, uninstall, runtime dependencies, and preservation of an existing MateEngine uLipSync installation.
 - Steam AppID `3625270`, BuildID `21557579`, completed a real Vercel streamed response and Fish WebSocket TTS run with PCM playback and native mouth movement.
 

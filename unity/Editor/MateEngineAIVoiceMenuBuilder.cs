@@ -49,14 +49,14 @@ public static class MateEngineAIVoiceMenuBuilder
         // TMP_Dropdown creates its popup canvas at sorting order 30000. Keep the
         // panel below that so the popup and its click-blocker sit above the glass UI.
         var canvas = canvasObject.GetComponent<Canvas>(); canvas.renderMode = RenderMode.ScreenSpaceOverlay; canvas.sortingOrder = 25000;
-        // A 3200x1800 reference makes the compact utility panel about 20% larger
-        // on MateEngine's 4K surface without returning to the oversized 1080p scale.
-        var scaler = canvasObject.GetComponent<CanvasScaler>(); scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize; scaler.referenceResolution = new Vector2(3200, 1800); scaler.matchWidthOrHeight = 0.5f;
+        // Keep the UI the same readable relative size across 1080p, 1440p, and 4K.
+        // Windows desktop scaling does not affect a ScreenSpaceOverlay canvas.
+        var scaler = canvasObject.GetComponent<CanvasScaler>(); scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize; scaler.referenceResolution = new Vector2(1920, 1080); scaler.matchWidthOrHeight = 0.5f;
         Stretch(canvasObject.GetComponent<RectTransform>());
         controller.canvas = canvas;
 
         var shade = NewImage("Shade", canvasObject.transform, new Color32(4, 5, 10, 170)); Stretch(shade.rectTransform);
-        var panel = NewImage("Glass Panel", shade.transform, Panel); SetRect(panel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(420, 460), Vector2.zero);
+        var panel = NewImage("Glass Panel", shade.transform, Panel); SetRect(panel.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(420, 460), Vector2.zero); controller.panelRoot = panel.rectTransform;
 
         var title = NewText("Title", panel.transform, "MATE ENGINE  /  AI + VOICE", 16, FontStyles.Bold, Text);
         SetRect(title.rectTransform, new Vector2(0.5f, 1f), new Vector2(350, 28), new Vector2(0, -14));
@@ -122,7 +122,11 @@ public static class MateEngineAIVoiceMenuBuilder
         Hint(lipSyncContent, "Higher smoothing is steadier. Gain controls mouth opening. Volume Influence below 1 evens loudness; above 1 exaggerates contrast. Defaults: 0.44 / 1.00 / 1.00.");
 
         controller.statusText = NewText("Status", panel.transform, "Ready. Settings stored locally.", 10, FontStyles.Normal, Muted);
-        SetRect(controller.statusText.rectTransform, new Vector2(0.5f, 0f), new Vector2(270, 28), new Vector2(-48, 15)); controller.statusText.alignment = TextAlignmentOptions.MidlineLeft;
+        SetRect(controller.statusText.rectTransform, new Vector2(0.5f, 0f), new Vector2(176, 28), new Vector2(-112, 15)); controller.statusText.alignment = TextAlignmentOptions.MidlineLeft;
+        var scaleRow = Row(panel.transform, 28); SetRect(scaleRow, new Vector2(0f, 0f), new Vector2(102, 28), new Vector2(208, 15));
+        controller.uiScaleDownButton = Button(scaleRow, "−", 1);
+        controller.uiScaleText = NewText("UI Scale", scaleRow, "100%", 10, FontStyles.Bold, Text); Layout(controller.uiScaleText.gameObject, 28, 1.4f); controller.uiScaleText.alignment = TextAlignmentOptions.Center;
+        controller.uiScaleUpButton = Button(scaleRow, "+", 1);
         controller.saveButton = Primitive<Button>("Button.prefab", panel.transform, "Save"); SetButtonText(controller.saveButton, "Save"); CompactText(controller.saveButton.GetComponentInChildren<TMP_Text>(true), 11, false); SetRect(controller.saveButton.GetComponent<RectTransform>(), new Vector2(1f, 0f), new Vector2(82, 28), new Vector2(-16, 15));
         return root;
     }
